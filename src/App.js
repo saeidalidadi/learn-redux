@@ -1,38 +1,38 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import * as expect from 'expect';
 
-
-const Counter = ({ value, onIncrement, onDecrement }) =>
+const Header = () =>
   (
-    <div>
-      <h1>{value}</h1>
-      <button onClick={onIncrement}>INC</button>
-      <button onClick={onDecrement}>DEC</button>
-    </div>
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <h1 className="App-title">Welcome to React</h1>
+    </header>
   );
 
+let nextId = 0;
 class App extends Component {
   render() {
     const store = this.props.store;
+    const todos = store.getState().todos;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Counter value={store.getState()}
-                 onIncrement={() =>
-                   store.dispatch({ type: 'INCREMENT'})
-                 }
-                 onDecrement={() =>
-	                 store.dispatch({ type: 'DECREMENT'})
-                 }
-        />
+        <Header/>
+        <input ref={node => this.input = node}/>
+        <button onClick={() => {
+	        if(this.input.value !== '') {
+		        store.dispatch({
+			        type: 'ADD_TODO',
+			        text: this.input.value,
+			        id: nextId++
+		        })
+            this.input.value = ''
+          }
+        }}>Add todo</button>
+        <ul>
+          {todos.map(t => <li key={t.id}>{t.text}</li>)
+          }
+        </ul>
       </div>
     );
   }

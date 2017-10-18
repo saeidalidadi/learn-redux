@@ -1,3 +1,4 @@
+import * as Redux from 'redux';
 
 const todo = (state, action) => {
 	switch (action.type) {
@@ -42,10 +43,20 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 			return state;
 	}
 };
+//
+// const todoApp = (state={}, action) => {
+// 	return {
+// 		todos: todos(state.todos, action),
+// 		visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+// 	}
+// };
 
-const todoApp = (state={}, action) => {
-	return {
-		todos: todos(state.todos, action),
-		visibilityFilter: visibilityFilter(state.visibilityFilter, action)
-	}
-};
+const { combineReducers, createStore } = Redux;
+const todoApp = combineReducers({
+	todos,
+	visibilityFilter
+});
+
+const store = createStore(todoApp);
+
+export default store;
