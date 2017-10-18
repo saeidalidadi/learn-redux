@@ -30,8 +30,20 @@ class App extends Component {
           }
         }}>Add todo</button>
         <ul>
-          {todos.map(t => <li key={t.id}>{t.text}</li>)
-          }
+          {todos.map(t =>
+            <li key={t.id}
+                onClick={() =>
+	                store.dispatch({
+		                type: 'TOGGLE_TODO',
+		                id: t.id
+	                })
+                }
+            style={{
+              textDecoration: t.completed ? 'line-through' : 'none'
+            }}>
+              {t.text}
+            </li>
+          )}
         </ul>
       </div>
     );
