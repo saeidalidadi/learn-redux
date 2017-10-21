@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import logo from './logo.svg';
 import './App.css';
 
@@ -55,7 +56,7 @@ const TodoList = ({
   )
 }
 
-const AddTodo = ({ store }) => {
+const AddTodo = (props, { store }) => {
   let input;
   return (
     <div>
@@ -74,6 +75,10 @@ const AddTodo = ({ store }) => {
 	    }>Add todo</button>
     </div>
   )
+};
+
+AddTodo.contextTypes = {
+	store: propTypes.object
 };
 
 const Link = ({
@@ -97,7 +102,8 @@ const Link = ({
 
 class VisibleTodoList extends Component {
 	componentDidMount() {
-	  const { store } = this.props;
+		console.log(this.context);
+	  const { store } = this.context;
 		this.unsubscribe = store.subscribe(() =>
 			this.forceUpdate()
 		)
@@ -106,7 +112,7 @@ class VisibleTodoList extends Component {
 		this.unsubscribe();
 	}
   render() {
-    const {store} = this.props;
+    const {store} = this.context;
     const state = store.getState();
     return (
       <TodoList
@@ -124,9 +130,13 @@ class VisibleTodoList extends Component {
   }
 }
 
+VisibleTodoList.contextTypes = {
+	store: propTypes.object
+};
+
 class FilterLink extends Component {
   componentDidMount() {
-    const { store } = this.props;
+    const { store } = this.context;
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
@@ -135,7 +145,8 @@ class FilterLink extends Component {
     this.unsubscribe();
   }
   render() {
-    const {filter, children, store} = this.props;
+    const {filter, children} = this.props;
+    const {store} = this.context;
     const state = store.getState();
     return (
       <Link
@@ -152,41 +163,37 @@ class FilterLink extends Component {
   }
 }
 
+FilterLink.contextTypes = {
+	store: propTypes.object
+};
+
 const Footer = ({ store }) => {
   return (
     <p>
       show: {''}
       <FilterLink
-        filter="SHOW_ALL"
-        store={store}
-       >all
+        filter="SHOW_ALL">all
       </FilterLink> {' '}
       <FilterLink
-        filter="SHOW_COMPLETED"
-        store={store}
-        >completed
+        filter="SHOW_COMPLETED">completed
       </FilterLink>{' '}
       <FilterLink
-        filter="SHOW_ACTIVE"
-        store={store}>active
+        filter="SHOW_ACTIVE">active
       </FilterLink>{' '}
     </p>
   )
 };
 
 let nextId = 0;
-class App extends Component {
-  render() {
-    const store = this.props.store;
-    return (
-      <div className="App">
-        <Header />
-        <AddTodo store={store}/>
-        <VisibleTodoList store={store}/>
-        <Footer store={store}/>
-      </div>
-    );
-  }
-}
+const App = () =>
+  (
+    <div className="App">
+      <Header />
+      <AddTodo />
+      <VisibleTodoList />
+      <Footer/>
+    </div>
+  );
+
 
 export default App;
