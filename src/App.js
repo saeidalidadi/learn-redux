@@ -5,7 +5,7 @@ import './App.css';
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case 'SHOW_ALL':
-      return todos
+      return todos;
     case 'SHOW_COMPLETED':
       return todos.filter(t => t.completed);
     case 'SHOW_ACTIVE':
@@ -39,6 +39,37 @@ const FilterLink = ({ filter, currentFilter,children }) =>{
 	);
 }
 
+const Todo = ({
+  text,
+  onClick,
+  completed
+}) => {
+  return (
+    <li onClick={onClick}
+        style={{
+		      textDecoration: completed ? 'line-through' : 'none'
+	      }}>
+		  {text}
+    </li>
+  )
+};
+
+const TodoList = ({
+  todos,
+  onTodoClick
+}) => {
+  return (
+    <ul>
+		  {todos.map(t =>
+        <Todo
+          key={t.id}
+          onClick={() => onTodoClick(t.id)}
+          {...t}/>
+		  )}
+    </ul>
+  )
+}
+
 let nextId = 0;
 let store;
 class App extends Component {
@@ -60,22 +91,15 @@ class App extends Component {
             this.input.value = ''
           }
         }}>Add todo</button>
-        <ul>
-          {visibleTodos.map(t =>
-            <li key={t.id}
-                onClick={() =>
-	                store.dispatch({
-		                type: 'TOGGLE_TODO',
-		                id: t.id
-	                })
-                }
-            style={{
-              textDecoration: t.completed ? 'line-through' : 'none'
-            }}>
-              {t.text}
-            </li>
-          )}
-        </ul>
+        <TodoList
+          todos={visibleTodos}
+          onTodoClick={(id) =>
+	          store.dispatch({
+		          type: 'TOGGLE_TODO',
+		          id
+	          })
+          }
+        />
         <p>
           show: {''}
           <FilterLink
