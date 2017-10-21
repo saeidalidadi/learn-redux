@@ -55,7 +55,7 @@ const TodoList = ({
   )
 }
 
-const AddTodo = () => {
+const AddTodo = ({ store }) => {
   let input;
   return (
     <div>
@@ -97,6 +97,7 @@ const Link = ({
 
 class VisibleTodoList extends Component {
 	componentDidMount() {
+	  const { store } = this.props;
 		this.unsubscribe = store.subscribe(() =>
 			this.forceUpdate()
 		)
@@ -105,7 +106,7 @@ class VisibleTodoList extends Component {
 		this.unsubscribe();
 	}
   render() {
-    const props = this.props;
+    const {store} = this.props;
     const state = store.getState();
     return (
       <TodoList
@@ -125,6 +126,7 @@ class VisibleTodoList extends Component {
 
 class FilterLink extends Component {
   componentDidMount() {
+    const { store } = this.props;
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
@@ -133,7 +135,7 @@ class FilterLink extends Component {
     this.unsubscribe();
   }
   render() {
-    const {filter, children} = this.props;
+    const {filter, children, store} = this.props;
     const state = store.getState();
     return (
       <Link
@@ -150,36 +152,38 @@ class FilterLink extends Component {
   }
 }
 
-const Footer = () => {
+const Footer = ({ store }) => {
   return (
     <p>
       show: {''}
       <FilterLink
         filter="SHOW_ALL"
+        store={store}
        >all
       </FilterLink> {' '}
       <FilterLink
         filter="SHOW_COMPLETED"
+        store={store}
         >completed
       </FilterLink>{' '}
       <FilterLink
-        filter="SHOW_ACTIVE">active
+        filter="SHOW_ACTIVE"
+        store={store}>active
       </FilterLink>{' '}
     </p>
   )
 };
 
 let nextId = 0;
-let store;
 class App extends Component {
   render() {
-    store = this.props.store;
+    const store = this.props.store;
     return (
       <div className="App">
         <Header />
-        <AddTodo />
-        <VisibleTodoList />
-        <Footer />
+        <AddTodo store={store}/>
+        <VisibleTodoList store={store}/>
+        <Footer store={store}/>
       </div>
     );
   }
