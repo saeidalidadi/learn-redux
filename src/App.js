@@ -72,47 +72,66 @@ const AddTodo = ({
   )
 };
 
-const FilterLink = ({
-  filter,
-  currentFilter,
+const Link = ({
+  active,
   children,
   onClick
 }) => {
-	if(filter === currentFilter) {
+	if(active) {
 		return <span>{children}</span>
 	}
 	return (
     <a href="#"
        onClick={(e) => {
          e.preventDefault();
-         onClick(filter);
+         onClick();
        }}
 
     >{children}</a>
 	);
 };
 
-const Footer = ({
-  visibilityFilter,
-  onFilterClick
-}) => {
+class FilterLink extends Component {
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    )
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  render() {
+    const {filter, children} = this.props;
+    const state = store.getState();
+    return (
+      <Link
+        active={filter === state.visibilityFilter}
+        onClick={() =>
+	        store.dispatch({
+		        type: 'SET_VISIBILITY_FILTER',
+		        filter
+	        })
+        }>
+        {children}
+      </Link>
+    )
+  }
+}
+
+const Footer = () => {
   return (
     <p>
       show: {''}
       <FilterLink
         filter="SHOW_ALL"
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}>all
+       >all
       </FilterLink> {' '}
       <FilterLink
         filter="SHOW_COMPLETED"
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}>completed
+        >completed
       </FilterLink>{' '}
       <FilterLink
-        filter="SHOW_ACTIVE"
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}>active
+        filter="SHOW_ACTIVE">active
       </FilterLink>{' '}
     </p>
   )
@@ -147,14 +166,7 @@ class App extends Component {
 	          })
           }
         />
-        <Footer
-          visibilityFilter={visibilityFilter}
-          onFilterClick={filter =>
-		          store.dispatch({
-			          type: 'SET_VISIBILITY_FILTER',
-			          filter
-		          })
-          }/>
+        <Footer />
       </div>
     );
   }
