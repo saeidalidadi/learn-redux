@@ -55,16 +55,20 @@ const TodoList = ({
   )
 }
 
-const AddTodo = ({
-  onAddClick,
-}) => {
+const AddTodo = () => {
   let input;
   return (
     <div>
       <input ref={node => input = node}/>
       <button
         onClick={() => {
-		      onAddClick(input.value);
+          if (input.value !== '') {
+            store.dispatch({
+              type: 'ADD_TODO',
+              text: input.value,
+              id: nextId++
+            });
+          }
 			    input.value = '';
 		    }
 	    }>Add todo</button>
@@ -90,6 +94,34 @@ const Link = ({
     >{children}</a>
 	);
 };
+
+class VisibleTodoList extends Component {
+	componentDidMount() {
+		this.unsubscribe = store.subscribe(() =>
+			this.forceUpdate()
+		)
+	}
+	componentWillUnmount() {
+		this.unsubscribe();
+	}
+  render() {
+    const props = this.props;
+    const state = store.getState();
+    return (
+      <TodoList
+        todos={
+          getVisibleTodos(state.todos, state.visibilityFilter)
+        }
+        onTodoClick={(id) =>
+			    store.dispatch({
+				    type: 'TOGGLE_TODO',
+				    id
+			    })
+		    }
+      />
+    )
+  }
+}
 
 class FilterLink extends Component {
   componentDidMount() {
@@ -142,30 +174,11 @@ let store;
 class App extends Component {
   render() {
     store = this.props.store;
-    const { todos, visibilityFilter } = store.getState();
-    const visibleTodos = getVisibleTodos(todos, visibilityFilter);
     return (
       <div className="App">
         <Header />
-        <AddTodo
-          onAddClick={(value) => {
-            if (value !== '') {
-              store.dispatch({
-                type: 'ADD_TODO',
-                text: value,
-                id: nextId++
-              });
-            }
-          }}/>
-        <TodoList
-          todos={visibleTodos}
-          onTodoClick={(id) =>
-	          store.dispatch({
-		          type: 'TOGGLE_TODO',
-		          id
-	          })
-          }
-        />
+        <AddTodo />
+        <VisibleTodoList />
         <Footer />
       </div>
     );

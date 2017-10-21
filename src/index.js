@@ -6,12 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './reducers';
 
 
-const render = () => {
-	ReactDOM.render(<App store={store}/>, document.getElementById('root'));
-};
-
-store.subscribe(render);
-render();
+ReactDOM.render(<App store={store}/>, document.getElementById('root'));
 
 
 registerServiceWorker();
