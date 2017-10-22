@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
@@ -57,30 +56,6 @@ const TodoList = ({
   )
 }
 
-// const AddTodo = (props, { store }) => {
-//   let input;
-//   return (
-//     <div>
-//       <input ref={node => input = node}/>
-//       <button
-//         onClick={() => {
-//           if (input.value !== '') {
-//             store.dispatch({
-//               type: 'ADD_TODO',
-//               text: input.value,
-//               id: nextId++
-//             });
-//           }
-// 			    input.value = '';
-// 		    }
-// 	    }>Add todo</button>
-//     </div>
-//   )
-// };
-//
-// AddTodo.contextTypes = {
-// 	store: propTypes.object
-// };
 
 let AddTodo = ({ dispatch }) => {
   let input;
@@ -103,36 +78,8 @@ let AddTodo = ({ dispatch }) => {
   )
 };
 
-// AddTodo = connect(
-// 	state => {
-// 		return {}
-// 	},
-// 	dispatch => {
-// 		return { dispatch }
-// 	}
-// )(AddTodo);
-
 AddTodo = connect()(AddTodo);
 
-
-const Link = ({
-  active,
-  children,
-  onClick
-}) => {
-	if(active) {
-		return <span>{children}</span>
-	}
-	return (
-    <a href="#"
-       onClick={(e) => {
-         e.preventDefault();
-         onClick();
-       }}
-
-    >{children}</a>
-	);
-};
 
 const mapStateToTodoListProps = (state) => {
 	return {
@@ -158,38 +105,79 @@ const VisibleTodoList = connect(
 )(TodoList);
 
 
-class FilterLink extends Component {
-  componentDidMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    )
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  render() {
-    const {filter, children} = this.props;
-    const {store} = this.context;
-    const state = store.getState();
-    return (
-      <Link
-        active={filter === state.visibilityFilter}
-        onClick={() =>
-	        store.dispatch({
-		        type: 'SET_VISIBILITY_FILTER',
-		        filter
-	        })
-        }>
-        {children}
-      </Link>
-    )
-  }
-}
 
-FilterLink.contextTypes = {
-	store: propTypes.object
+const Link = ({
+  active,
+  children,
+  onClick
+}) => {
+	if(active) {
+		return <span>{children}</span>
+	}
+	return (
+		<a href="#"
+		   onClick={(e) => {
+			   e.preventDefault();
+			   onClick();
+		   }}
+
+		>{children}</a>
+	);
 };
+
+// class FilterLink extends Component {
+//   componentDidMount() {
+//     const { store } = this.context;
+//     this.unsubscribe = store.subscribe(() =>
+//       this.forceUpdate()
+//     )
+//   }
+//   componentWillUnmount() {
+//     this.unsubscribe();
+//   }
+//   render() {
+//     const {filter, children} = this.props;
+//     const {store} = this.context;
+//     const state = store.getState();
+//     return (
+//       <Link
+//         active={filter === state.visibilityFilter}
+//         onClick={() =>
+// 	        store.dispatch({
+// 		        type: 'SET_VISIBILITY_FILTER',
+// 		        filter
+// 	        })
+//         }>
+//         {children}
+//       </Link>
+//     )
+//   }
+// }
+//
+// FilterLink.contextTypes = {
+// 	store: propTypes.object
+// };
+
+const mapStateToLinkProps = (state, props) => {
+	return {
+		active: props.filter === state.visibilityFilter
+	}
+};
+
+const mapDispatchToLinkProps = (dispatch, props) => {
+	return {
+		onClick: () =>
+			dispatch({
+				type: 'SET_VISIBILITY_FILTER',
+				filter: props.filter
+			})
+	}
+};
+
+const FilterLink = connect(
+	mapStateToLinkProps,
+	mapDispatchToLinkProps
+)(Link);
 
 const Footer = ({ store }) => {
   return (
