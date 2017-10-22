@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import logo from './logo.svg';
+import * as actions from './reducers';
 import './App.css';
 
 const getVisibleTodos = (todos, filter) => {
@@ -65,11 +66,7 @@ let AddTodo = ({ dispatch }) => {
       <button
         onClick={() => {
           if (input.value !== '') {
-            dispatch({
-              type: 'ADD_TODO',
-              text: input.value,
-              id: nextId++
-            });
+            dispatch(actions.addTodo(input.value));
           }
 			    input.value = '';
 		    }
@@ -91,10 +88,7 @@ const mapStateToTodoListProps = (state) => {
 const mapDispatchToTodoListProps = (dispatch) => {
 	return {
 		onTodoClick: (id) => {
-			dispatch({
-				type: 'TOGGLE_TODO',
-				id
-			})
+			dispatch(actions.toggleTodo(id))
 		}
 	}
 };
@@ -125,38 +119,6 @@ const Link = ({
 	);
 };
 
-// class FilterLink extends Component {
-//   componentDidMount() {
-//     const { store } = this.context;
-//     this.unsubscribe = store.subscribe(() =>
-//       this.forceUpdate()
-//     )
-//   }
-//   componentWillUnmount() {
-//     this.unsubscribe();
-//   }
-//   render() {
-//     const {filter, children} = this.props;
-//     const {store} = this.context;
-//     const state = store.getState();
-//     return (
-//       <Link
-//         active={filter === state.visibilityFilter}
-//         onClick={() =>
-// 	        store.dispatch({
-// 		        type: 'SET_VISIBILITY_FILTER',
-// 		        filter
-// 	        })
-//         }>
-//         {children}
-//       </Link>
-//     )
-//   }
-// }
-//
-// FilterLink.contextTypes = {
-// 	store: propTypes.object
-// };
 
 const mapStateToLinkProps = (state, props) => {
 	return {
@@ -167,10 +129,7 @@ const mapStateToLinkProps = (state, props) => {
 const mapDispatchToLinkProps = (dispatch, props) => {
 	return {
 		onClick: () =>
-			dispatch({
-				type: 'SET_VISIBILITY_FILTER',
-				filter: props.filter
-			})
+			dispatch(actions.setVisibilityFilter(props.filter))
 	}
 };
 
