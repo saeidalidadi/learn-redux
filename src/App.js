@@ -25,7 +25,6 @@ const Header = () =>
     </header>
   );
 
-
 const Todo = ({
   text,
   onClick,
@@ -99,7 +98,6 @@ const VisibleTodoList = connect(
 )(TodoList);
 
 
-
 const Link = ({
   active,
   children,
@@ -155,7 +153,6 @@ const Footer = ({ store }) => {
   )
 };
 
-let nextId = 0;
 const App = () =>
   (
     <div className="App">
@@ -165,6 +162,5 @@ const App = () =>
       <Footer/>
     </div>
   );
-
 
 export default App;
