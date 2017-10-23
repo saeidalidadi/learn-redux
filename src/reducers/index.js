@@ -58,4 +58,14 @@ const todoApp = combineReducers({
 	visibilityFilter
 });
 
-export const store = createStore(todoApp);
+const persistStae = {
+	todos: [{
+		text: 'Init Todo',
+		id:'1q2w3e4',
+		completed: false
+	}],
+	visibilityFilter: undefined
+};
+
+
+export const store = createStore(todoApp, persistStae);
