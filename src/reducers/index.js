@@ -1,19 +1,13 @@
 import * as Redux from 'redux';
-import todoApp from './todo-app';
-import { loadState, saveState } from './local-storage';
-import { throttle } from 'lodash';
-export * from './actions';
+import todos from './todos';
+import visibilityFilter from './visibility-filter';
 
 
-const { createStore } = Redux;
 
+const { combineReducers } = Redux;
+const todoReducers = combineReducers({
+	todos,
+	visibilityFilter
+});
 
-//export const store = createStore(todoApp, loadState());
-export const store = createStore(todoApp, loadState());
-
-
-store.subscribe(throttle(() =>
-	saveState({
-		todos: store.getState().todos
-	})
-), 1000);
+export default todoReducers;

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import logo from './logo.svg';
-import * as actions from './reducers';
-import './App.css';
+import * as actions from './actions';
+
 
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
