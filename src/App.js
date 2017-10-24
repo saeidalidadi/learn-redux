@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { FilterLink } from './components';
 import logo from './logo.svg';
 import * as actions from './actions';
-
 
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
@@ -98,63 +98,46 @@ const VisibleTodoList = connect(
 )(TodoList);
 
 
-const Link = ({
-  active,
-  children,
-  onClick
-}) => {
-	if(active) {
-		return <span>{children}</span>
-	}
-	return (
-		<a href="#"
-		   onClick={(e) => {
-			   e.preventDefault();
-			   onClick();
-		   }}
+// const Link = ({
+//   active,
+//   children,
+//   onClick
+// }) => {
+// 	if(active) {
+// 		return <span>{children}</span>
+// 	}
+// 	return (
+// 		<a href="#"
+// 		   onClick={(e) => {
+// 			   e.preventDefault();
+// 			   onClick();
+// 		   }}
+//
+// 		>{children}</a>
+// 	);
+// };
 
-		>{children}</a>
-	);
-};
 
 
-const mapStateToLinkProps = (state, props) => {
-	return {
-		active: props.filter === state.visibilityFilter
-	}
-};
-
-const mapDispatchToLinkProps = (dispatch, props) => {
-	return {
-		onClick: () =>
-			dispatch(actions.setVisibilityFilter(props.filter))
-	}
-};
-
-const FilterLink = connect(
-	mapStateToLinkProps,
-	mapDispatchToLinkProps
-)(Link);
-
-const Footer = ({ store }) => {
+const Footer = () => {
   return (
     <p>
       show: {''}
       <FilterLink
-        filter="SHOW_ALL">all
+        filter="all">all
       </FilterLink> {' '}
       <FilterLink
-        filter="SHOW_COMPLETED">completed
+        filter="completed">completed
       </FilterLink>{' '}
       <FilterLink
-        filter="SHOW_ACTIVE">active
+        filter="active">active
       </FilterLink>{' '}
     </p>
   )
 };
 
-const App = () =>
-  (
+const App = () => {
+  return (
     <div className="App">
       <Header />
       <AddTodo />
@@ -162,5 +145,6 @@ const App = () =>
       <Footer/>
     </div>
   );
+}
 
 export default App;
