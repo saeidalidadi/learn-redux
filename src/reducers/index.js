@@ -1,5 +1,5 @@
 import * as Redux from 'redux';
-import todos from './todos';
+import todos, * as fromTodos from './todos';
 
 
 const { combineReducers } = Redux;
@@ -8,3 +8,6 @@ const todoReducers = combineReducers({
 });
 
 export default todoReducers;
+
+export const getVisibleTodos = (state, filter) =>
+  fromTodos.getVisibleTodos(state.todos, filter);

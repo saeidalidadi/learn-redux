@@ -2,21 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FilterLink } from './components';
+import { getVisibleTodos } from './reducers';
 import logo from './logo.svg';
 import * as actions from './actions';
-
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'all':
-      return todos;
-    case 'completed':
-      return todos.filter(t => t.completed);
-    case 'active':
-      return todos.filter(t => !t.completed);
-    default:
-      throw new Error('filter is not defined or unknown: ' + filter)
-  }
-};
 
 const Header = () =>
   (
@@ -82,7 +70,7 @@ AddTodo = connect()(AddTodo);
 const mapStateToTodoListProps = (state, { params }) => {
 	return {
 		todos:
-			getVisibleTodos(state.todos, params.filter ? params.filter : 'all')
+			getVisibleTodos(state,  params.filter || 'all')
 	}
 };
 
