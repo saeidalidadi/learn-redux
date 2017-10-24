@@ -6,14 +6,14 @@ import * as actions from './actions';
 
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
-    case 'SHOW_ALL':
+    case 'all':
       return todos;
-    case 'SHOW_COMPLETED':
+    case 'completed':
       return todos.filter(t => t.completed);
-    case 'SHOW_ACTIVE':
+    case 'active':
       return todos.filter(t => !t.completed);
     default:
-      throw new Error('filter is not defined')
+      throw new Error('filter is not defined or unknown: ' + filter)
   }
 };
 
@@ -50,7 +50,8 @@ const TodoList = ({
         <Todo
           key={t.id}
           onClick={() => onTodoClick(t.id)}
-          {...t}/>
+          {...t}
+        />
 		  )}
     </ul>
   )
@@ -77,10 +78,10 @@ let AddTodo = ({ dispatch }) => {
 AddTodo = connect()(AddTodo);
 
 
-const mapStateToTodoListProps = (state) => {
+const mapStateToTodoListProps = (state, props) => {
 	return {
 		todos:
-			getVisibleTodos(state.todos, state.visibilityFilter)
+			getVisibleTodos(state.todos, props.filter ? props.filter : 'all')
 	}
 };
 
@@ -96,27 +97,6 @@ const VisibleTodoList = connect(
 	mapStateToTodoListProps,
 	mapDispatchToTodoListProps
 )(TodoList);
-
-
-// const Link = ({
-//   active,
-//   children,
-//   onClick
-// }) => {
-// 	if(active) {
-// 		return <span>{children}</span>
-// 	}
-// 	return (
-// 		<a href="#"
-// 		   onClick={(e) => {
-// 			   e.preventDefault();
-// 			   onClick();
-// 		   }}
-//
-// 		>{children}</a>
-// 	);
-// };
-
 
 
 const Footer = () => {
@@ -136,12 +116,12 @@ const Footer = () => {
   )
 };
 
-const App = () => {
+const App = ({ params }) => {
   return (
     <div className="App">
       <Header />
       <AddTodo />
-      <VisibleTodoList />
+      <VisibleTodoList filter={params.filter}/>
       <Footer/>
     </div>
   );
