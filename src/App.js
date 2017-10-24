@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { FilterLink } from './components';
 import logo from './logo.svg';
 import * as actions from './actions';
@@ -78,10 +79,10 @@ let AddTodo = ({ dispatch }) => {
 AddTodo = connect()(AddTodo);
 
 
-const mapStateToTodoListProps = (state, props) => {
+const mapStateToTodoListProps = (state, { params }) => {
 	return {
 		todos:
-			getVisibleTodos(state.todos, props.filter ? props.filter : 'all')
+			getVisibleTodos(state.todos, params.filter ? params.filter : 'all')
 	}
 };
 
@@ -93,10 +94,10 @@ const mapDispatchToTodoListProps = (dispatch) => {
 	}
 };
 
-const VisibleTodoList = connect(
+const VisibleTodoList = withRouter(connect(
 	mapStateToTodoListProps,
 	mapDispatchToTodoListProps
-)(TodoList);
+)(TodoList));
 
 
 const Footer = () => {
