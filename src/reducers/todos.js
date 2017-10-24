@@ -8,7 +8,7 @@ const allIds = (state=[], action) => {
     default:
       return state;
   }
-}
+};
 
 const byId = (state = {}, action) => {
   switch (action.type) {
@@ -34,7 +34,7 @@ const getAllTodos = (state) =>
   state.allIds.map(id => state.byId[id])
 
 export const getVisibleTodos = (state, filter) => {
-  console.log(state);
+
   const allTodos = getAllTodos(state);
   switch (filter) {
     case 'all':
