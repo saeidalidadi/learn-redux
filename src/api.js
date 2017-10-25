@@ -7,11 +7,11 @@ const fakeDatabase = {
     id: v4(),
     completed: false
   },
-    {
-      text: 'new new todo',
-      id: v4(),
-      completed: false
-    }]
+  {
+    text: 'new new todo',
+    id: v4(),
+    completed: false
+  }]
 };
 
 const delay = (ms) =>
