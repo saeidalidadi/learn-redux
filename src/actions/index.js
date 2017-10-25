@@ -1,5 +1,11 @@
 import v4 from 'uuid/v4';
 
+export const receiveTodos = (filter, response) => ({
+	type: 'RECEIVE_TODOS',
+	filter,
+	response
+});
+
 export const addTodo = (value) => ({
 	type: 'ADD_TODO',
 	text: value,
