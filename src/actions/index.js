@@ -1,10 +1,16 @@
 import v4 from 'uuid/v4';
+import * as api from '../api';
 
-export const receiveTodos = (filter, response) => ({
+const receiveTodos = (filter, response) => ({
 	type: 'RECEIVE_TODOS',
 	filter,
 	response
 });
+
+export const fetchTodos = (filter) =>
+  api.fetchTodos(filter).then(todos =>
+    receiveTodos(filter, todos)
+  );
 
 export const addTodo = (value) => ({
 	type: 'ADD_TODO',

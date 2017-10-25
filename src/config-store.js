@@ -4,7 +4,17 @@ import todoReducers from './reducers';
 const { createStore } = Redux;
 
 
-const addLoggingToDispatch = (store) =>{
+const addPromiseSupportToDispatch = (store) => {
+  const rawDispatch = store.dispatch;
+  return (action) => {
+    if (typeof action.then === 'function') {
+      return action.then(rawDispatch)
+    }
+    return rawDispatch(action);
+  }
+}
+
+const addLoggingToDispatch = (store) => {
   const rawDispatch = store.dispatch;
   return (action) => {
     console.group(action.type);
@@ -18,13 +28,14 @@ const addLoggingToDispatch = (store) =>{
 };
 
 
-
 const configStore = () => {
   const store = createStore(todoReducers);
 
   if (process.env.NODE_ENV !== 'production') {
     store.dispatch = addLoggingToDispatch(store);
   }
+
+  store.dispatch = addPromiseSupportToDispatch(store);
   return store;
 };
 
