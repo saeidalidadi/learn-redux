@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import {connect}  from 'react-redux';
 import { FilterLink } from './components';
-import { getVisibleTodos } from './reducers';
+import { VisibleTodoList } from './components'
 import logo from './logo.svg';
 import * as actions from './actions';
 
@@ -13,38 +12,6 @@ const Header = () =>
       <h1 className="App-title">Welcome to React</h1>
     </header>
   );
-
-const Todo = ({
-  text,
-  onClick,
-  completed
-}) => {
-  return (
-    <li onClick={onClick}
-        style={{
-		      textDecoration: completed ? 'line-through' : 'none'
-	      }}>
-		  {text}
-    </li>
-  )
-};
-
-const TodoList = ({
-  todos,
-  onTodoClick
-}) => {
-  return (
-    <ul>
-		  {todos.map(t =>
-        <Todo
-          key={t.id}
-          onClick={() => onTodoClick(t.id)}
-          {...t}
-        />
-		  )}
-    </ul>
-  )
-}
 
 
 let AddTodo = ({ dispatch }) => {
@@ -66,26 +33,6 @@ let AddTodo = ({ dispatch }) => {
 
 AddTodo = connect()(AddTodo);
 
-
-const mapStateToTodoListProps = (state, { params }) => {
-	return {
-		todos:
-			getVisibleTodos(state,  params.filter || 'all')
-	}
-};
-
-// const mapDispatchToTodoListProps = (dispatch) => {
-// 	return {
-// 		onTodoClick: (id) => {
-// 			dispatch(actions.toggleTodo(id))
-// 		}
-// 	}
-// };
-
-const VisibleTodoList = withRouter(connect(
-	mapStateToTodoListProps,
-  { onTodoClick: actions.toggleTodo }
-)(TodoList));
 
 
 const Footer = () => {
