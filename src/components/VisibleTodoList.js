@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { getVisibleTodos, getIsFetching } from "../reducers";
-import {toggleTodo, fetchTodos, requestTodos } from "../actions";
+import {toggleTodo, fetchTodos } from "../actions";
 import TodoList from './TodoList';
 
 
@@ -11,8 +11,7 @@ class VisibleTodoList extends Component {
    this.fetchData();
   }
   fetchData() {
-    const { filter, requestTodos, fetchTodos } = this.props;
-    requestTodos(filter);
+    const { filter, fetchTodos } = this.props;
     fetchTodos(filter);
   }
   componentDidUpdate(prevProps) {
@@ -47,7 +46,7 @@ const mapStateToProps = (state, { params }) => {
 
 VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  { toggleTodo, requestTodos, fetchTodos }
+  { toggleTodo, fetchTodos }
 )(VisibleTodoList));
 
 
